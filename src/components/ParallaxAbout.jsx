@@ -29,7 +29,7 @@ export default function ParallaxAbout() {
           viewport={{ once: true }}
           className="text-4xl md:text-5xl mb-4 font-cyber"
         >
-          About&nbsp;Me
+          Kto&nbsp;som
         </motion.h2>
 
         <motion.p
@@ -39,7 +39,7 @@ export default function ParallaxAbout() {
           viewport={{ once: true }}
           className="max-w-xl text-lg drop-shadow"
         >
-          kto som ↓
+          kto
         </motion.p>
       </div>
     </section>

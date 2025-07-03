@@ -12,7 +12,7 @@ export default function ContactSection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        Get in touch
+        kde
       </motion.h2>
 
       {/* icons */}
@@ -25,7 +25,7 @@ export default function ContactSection() {
       >
         {[
           { href: 'https://instagram.com/patrixtano', icon: Instagram },
-          { href: 'https://github.com/yourprofile',   icon: Github   },
+          { href: 'https://github.com/patrixtano',   icon: Github   },
         ].map(({ href, icon: Icon }) => (
           <a
             key={href}
