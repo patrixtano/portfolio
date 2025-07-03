@@ -14,8 +14,8 @@ export default function App() {
     if (document.getElementById('oneko-canvas')) return;
 
     const script = document.createElement('script');
-    script.src   = '/oneko/oneko.js';      // in /public/oneko/
-    script.dataset.cat = '/oneko/oneko.gif';
+    script.src   = 'oneko/oneko.js';      // in /public/oneko/
+    script.dataset.cat = 'oneko/oneko.gif';
     script.async = true;
 
     script.onload = () => {
@@ -37,7 +37,7 @@ export default function App() {
     <>
       {/* Floating PNG layers */}
       <ParallaxFloat
-        src="/float/float1.png"
+        src="float/float1.png"
         size="w-16 h-16"
         className="left-10 top-10"
         deltaX={10000}
@@ -47,7 +47,7 @@ export default function App() {
         z={4}
       />
       <ParallaxFloat
-        src="/float/float2.png"
+        src="float/float2.png"
         size="w-32 h-32"
         className="top-1/3 left-[-10%]"
         deltaX={10000}
@@ -55,7 +55,7 @@ export default function App() {
         z={4}
       />
       <ParallaxFloat
-        src="/float/float3.png"
+        src="float/float3.png"
         size="w-40 h-40"
         className="right-5 bottom-20"
         startY={20}
@@ -75,7 +75,7 @@ export default function App() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
-          <source src="/background.mp4" type="video/mp4" />
+          <source src="background.mp4" type="video/mp4" />
         </video>
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
