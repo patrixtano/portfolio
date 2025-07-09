@@ -17,7 +17,7 @@ export default function ParallaxAbout() {
       {/* Parallax background */}
       <motion.div
         style={{ y }}
-        className="absolute inset-0 bg-[url('/parallax.png')] bg-cover bg-center"
+        className="absolute inset-0 bg-[url('/parallax.jpg')] bg-cover bg-center"
       />
 
       {/* Foreground content */}
