@@ -29,7 +29,7 @@ export default function App() {
         loop
         muted
         playsInline
-        className="fixed inset-0 w-screen h-screen object-cover z-[-10]"
+        className="absolute inset-0 w-full h-full object-cover z-0absolute inset-0 w-full h-full object-cover object-center z-0"
         style={{
           objectFit: 'fill', // try this instead of "cover"
           transform: 'translateZ(0)',
@@ -73,8 +73,8 @@ export default function App() {
       {/* ───── HERO ───── */}
       <div className="relative w-full h-screen overflow-hidden font-cyber">
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-          <h1 className="text-5xl md:text-6xl mb-6 text-cyan-400 drop-shadow-lg">
-            Welcome to My Art Portfolio
+          <h1 className="text-5xl md:text-6xl mb-6 text-fuchsia-400 drop-shadow-lg">
+            @PATRIXTANO
           </h1>
           <p className="mb-8 text-lg max-w-xl drop-shadow">
             Explore my creations in 3D, motion design, and animation.
