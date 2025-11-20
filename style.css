@@ -1,0 +1,114 @@
+/* ------------------------
+   Global Styles
+------------------------- */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: black; /* fallback if video fails */
+    overflow-x: hidden;
+}
+
+/* ------------------------
+   Background Video
+------------------------- */
+
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 1;
+
+}
+
+/* ------------------------
+   Clouds Layer
+------------------------- */
+
+.cloud1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: scale(0.8);
+    width: auto;
+    height: auto;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cloud2 {
+    position: fixed;
+    top: 70%;
+    left: 20%;
+    transform: scale(0.8);
+    width: auto;
+    height: auto;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cloud3 {
+    position: fixed;
+    top: 50%;
+    left: 70%;
+    transform: scale(0.8);
+    width: auto;
+    height: auto;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* ------------------------
+   Hero Section
+------------------------- */
+
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    backdrop-filter: none;
+    z-index: 2;
+}
+
+/* ------------------------
+   Content Sections
+------------------------- */
+
+.section {
+    padding: 100px 20px;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: none;
+}
+
+.project {
+    background: rgba(0, 0, 0, 0.5);
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* ------------------------
+   Oneko Cat
+------------------------- */
+
+#oneko {
+    transform: scale(1.5);
+    transform-origin: center;
+    z-index: 2147483647 !important;
+    pointer-events: none !important;
+}
