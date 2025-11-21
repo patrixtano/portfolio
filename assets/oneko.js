@@ -20,6 +20,7 @@
   let idleTime = 0;
   let idleAnimation = null;
   let idleAnimationFrame = 0;
+  let heartsPlaying = false;
 
   const nekoSpeed = 10;
   const spriteSets = {
@@ -119,7 +120,7 @@
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
     nekoEl.style.position = "fixed";
-    nekoEl.style.pointerEvents = "none";
+    nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
@@ -133,7 +134,8 @@
       mousePosX = event.clientX;
       mousePosY = event.clientY;
     });
-    
+    nekoEl.addEventListener("click", hearts);
+
     if (persistPosition) {
       window.addEventListener("beforeunload", function (event) {
         window.localStorage.setItem("oneko", JSON.stringify({
@@ -175,6 +177,13 @@
     nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
   }
 
+  function hearts() {
+    heartsPlaying = true;
+    setSprite("scratchWallN", 0);
+    resetIdleAnimation();
+    heartsPlaying = false;
+  }
+
   function resetIdleAnimation() {
     idleAnimation = null;
     idleAnimationFrame = 0;
@@ -184,7 +193,7 @@
 
     // every ~ 20 seconds
     if (
-      idleTime > 5 &&
+      idleTime > 10 &&
       Math.floor(Math.random() * 20) == 0 &&
       idleAnimation == null
     ) {
@@ -224,6 +233,9 @@
   }
 
   function frame() {
+    if (heartsPlaying) {
+      return;
+    }
     frameCount += 1;
     const diffX = nekoPosX - mousePosX;
     const diffY = nekoPosY - mousePosY;

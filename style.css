@@ -111,5 +111,5 @@ body {
     transform: scale(3);
     transform-origin: center;
     z-index: 5 !important;
-    pointer-events: none !important;
+    pointer-events: auto;
 }
