@@ -107,7 +107,7 @@ body {
 ------------------------- */
 
 #oneko {
-    transform: scale(1.5);
+    transform: scale(3);
     transform-origin: center;
     z-index: 2147483647 !important;
     pointer-events: none !important;

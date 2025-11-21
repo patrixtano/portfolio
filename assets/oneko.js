@@ -86,7 +86,7 @@
   };
 
   function init() {
-    let nekoFile = "./oneko.gif"
+    let nekoFile = "./bird.gif"
     const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
       nekoFile = curScript.dataset.cat
@@ -179,29 +179,16 @@
     idleAnimation = null;
     idleAnimationFrame = 0;
   }
-
   function idle() {
     idleTime += 1;
 
     // every ~ 20 seconds
     if (
-      idleTime > 10 &&
-      Math.floor(Math.random() * 200) == 0 &&
+      idleTime > 5 &&
+      Math.floor(Math.random() * 20) == 0 &&
       idleAnimation == null
     ) {
       let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
-      if (nekoPosX < 32) {
-        avalibleIdleAnimations.push("scratchWallW");
-      }
-      if (nekoPosY < 32) {
-        avalibleIdleAnimations.push("scratchWallN");
-      }
-      if (nekoPosX > window.innerWidth - 32) {
-        avalibleIdleAnimations.push("scratchWallE");
-      }
-      if (nekoPosY > window.innerHeight - 32) {
-        avalibleIdleAnimations.push("scratchWallS");
-      }
       idleAnimation =
         avalibleIdleAnimations[
           Math.floor(Math.random() * avalibleIdleAnimations.length)
@@ -253,7 +240,7 @@
     if (idleTime > 1) {
       setSprite("alert", 0);
       // count down after being alerted before moving
-      idleTime = Math.min(idleTime, 7);
+      idleTime = Math.min(idleTime, 4);
       idleTime -= 1;
       return;
     }
