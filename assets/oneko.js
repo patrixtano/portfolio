@@ -134,7 +134,7 @@
       mousePosX = event.clientX;
       mousePosY = event.clientY;
     });
-    nekoEl.addEventListener("click", hearts);
+    // nekoEl.addEventListener("click", hearts);
 
     if (persistPosition) {
       window.addEventListener("beforeunload", function (event) {
