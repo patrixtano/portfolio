@@ -111,7 +111,7 @@ body {
     transform: scale(3);
     transform-origin: center;
     z-index: 5 !important;
-    pointer-events: auto;
+    pointer-events: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
