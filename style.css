@@ -140,7 +140,7 @@ body {
     color: white;
 
     gap: 10px;
-    z-index: 2;             /* above clouds, behind text */
+    z-index: 15;
 }
 
 .pool-number-vertical {
