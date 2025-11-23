@@ -19,55 +19,47 @@ document.addEventListener('scroll', () => {
         `translateX(${scrolled * -0.4}px) scale(0.8)`;
 });
 
+
 // ----------------------------------------------------------
-// Live Pool Number Strip at Bottom of Page
+// Vertical Pool Number Bar (JSON from GitHub Gist)
 // ----------------------------------------------------------
 
-async function loadPoolStrip() {
-    const gistURL = "https://gist.githubusercontent.com/patrixtano/18b9152b3bab7dbdde9c77f400f6e504/raw/latest-pool.tsv";
+async function loadPoolStripVertical() {
+    const gistURL = "https://gist.githubusercontent.com/patrixtano/18b9152b3bab7dbdde9c77f400f6e504/raw/latest.json";
 
     try {
         const resp = await fetch(gistURL, { cache: "no-cache" });
-        const text = await resp.text();
+        if (!resp.ok) throw new Error("Failed to fetch gist");
 
-        const lines = text.trim().split("\n");
-        if (lines.length <= 1) return;
+        const json = await resp.json();
 
-        const header = lines[0].split("\t");
-        const rows = lines.slice(1).map(line => {
-            const cols = line.split("\t");
-            return Object.fromEntries(header.map((h, i) => [h, cols[i]]));
-        });
+        // Convert to numbers
+        const values = json.map(row => parseInt(row.people, 10));
 
-        const values = rows.map(r => parseInt(r.people, 10));
+        // Last 10 values, newest last → reverse so newest is first
+        const lastValues = values.slice(-10).reverse();
 
-        // Take last 10 (or fewer)
-        const lastValues = values.slice(-10);
-
-        const container = document.getElementById("poolBar");
+        const container = document.getElementById("poolBarVertical");
         container.innerHTML = "";
 
         const total = lastValues.length;
 
         lastValues.forEach((value, index) => {
-            const age = total - index - 1; // 0 = newest, higher = older
+            const age = index; // top = age 0
+            const opacity = Math.max(1 - age * 0.15, 0.15);
+            const div = document.createElement("div");
+            div.textContent = value;
+            div.className = "pool-number-vertical";
+            div.style.opacity = opacity.toFixed(2);
 
-            // Opacity gradient: newest = 1, oldest ~ 0.3
-            const opacity = 1 - (age * 0.065);  
-            
-            const span = document.createElement("span");
-            span.textContent = value;
-            span.className = "pool-number";
-            span.style.opacity = opacity.toFixed(2);
-
-            container.appendChild(span);
+            container.appendChild(div);
         });
 
     } catch (err) {
-        console.error("Pool bar load failed", err);
+        console.error("Vertical pool bar load failed:", err);
     }
 }
 
 // Load immediately and refresh every 5 min
-loadPoolStrip();
-setInterval(loadPoolStrip, 300000);
+loadPoolStripVertical();
+setInterval(loadPoolStripVertical, 300000);
