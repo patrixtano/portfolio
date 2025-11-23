@@ -46,7 +46,7 @@ async function loadPoolStripVertical() {
 
         lastValues.forEach((value, index) => {
             const age = index; // top = age 0
-            const opacity = Math.max(1 - age * 0.15, 0.15);
+            const opacity = Math.max(1 - age * 0.3, 0.3);
             const div = document.createElement("div");
             div.textContent = value;
             div.className = "pool-number-vertical";
@@ -62,4 +62,4 @@ async function loadPoolStripVertical() {
 
 // Load immediately and refresh every 5 min
 loadPoolStripVertical();
-setInterval(loadPoolStripVertical, 300000);
+setInterval(loadPoolStripVertical, 60000);
