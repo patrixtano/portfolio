@@ -117,3 +117,26 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* ------------------------
+   Pool Bar
+------------------------- */
+
+#poolBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: flex-end; /* align to the right */
+    gap: 14px;
+    z-index: 50;
+    font-family: monospace;
+    font-size: 20px;
+}
+
+.pool-number {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
