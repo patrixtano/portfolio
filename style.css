@@ -11,10 +11,10 @@ body {
 }
 
 /* ------------------------
-   Background Video
+   Background Gif
 ------------------------- */
 
-#bgVideo {
+#bgImage {
     position: fixed;
     top: 0;
     left: 0;
@@ -22,8 +22,8 @@ body {
     height: 100vh;
     object-fit: cover;
     z-index: -1;
-    opacity: 1;
-
+    pointer-events: none;
+    filter: saturate(0.7);
 }
 
 /* ------------------------
