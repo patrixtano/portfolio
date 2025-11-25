@@ -6,22 +6,26 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     color: white;
-    background: black;
-
-    /* GIF background */
-    background-image: url("assets/background.gif");
-    background-size: cover;         /* fill the screen */
-    background-position: center;    /* centered */
-    background-repeat: no-repeat;   /* no tiling */
-    background-attachment: fixed;   /* STAYS during scroll (key!) */
+    background: black; /* fallback if video fails */
+    overflow-x: hidden;
 }
 
-@media (max-width: 768px) {
-    #bgGif {
-        height: 100vh;          /* Stretch vertically for tall screens */
-        background-size: cover; /* Crop left/right — what you want */
-    }
+/* ------------------------
+   Background Video
+------------------------- */
+
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 1;
+
 }
+
 /* ------------------------
    Clouds Layer
 ------------------------- */
