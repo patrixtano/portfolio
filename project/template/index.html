@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  PROJECT PAGE TEMPLATE
+  ============================================================
+  HOW TO USE THIS TEMPLATE:
+  1. Duplicate the entire /project/template/ folder.
+  2. Rename it to match your project, e.g. /project/my-project/.
+  3. Edit the content in the .project-stage div — embed an
+     iframe, drop in images, or build the experience directly.
+  4. Update the info panel on the right: edit the title, problem,
+     solution, stack tags, and links.
+  5. Update the <title> and <meta> tags in the <head>.
+  6. Update the "Back" link in the nav if your folder depth changes.
+  ============================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Project title - a project by Patrik Stano." />
+  <meta property="og:title" content="Project Title - Patrik Stano" />
+  <meta property="og:description" content="A description of this project." />
+  <title>Project Title — Patrik Stano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { padding-top: 0; }
+    .nav-minimal { height: 90px; }
+
+    .nav-back {
+      font-size: 1.56rem;
+      font-weight: 600;
+      color: var(--text);
+      position: relative;
+      isolation: isolate;
+      padding: 0.25rem 0.55rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-back::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      z-index: -1;
+      clip-path: inset(calc(100% - 4px) 0 0 0);
+      transition: clip-path 0.25s ease;
+    }
+
+    .nav-back:hover::before {
+      clip-path: inset(0 0 0 0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================
+       Just "← Back" and the PS logo.
+       ============================== -->
+  <nav class="nav-minimal">
+    <div class="nav-minimal-inner container">
+      <a href="../../projects/" class="nav-back">← Back</a>
+      <a href="../../" class="nav-logo"><img src="../../logo.svg" alt="Patrik Stano" /></a>
+    </div>
+  </nav>
+
+  <!-- ==============================
+       PROJECT STAGE
+       Full-viewport area for your project content.
+       Replace the placeholder with your actual content:
+         • <iframe> for live apps or Figma prototypes
+         • <img> or <video> for visual work
+         • Custom HTML/CSS/JS built directly here
+       ============================== -->
+  <main class="project-stage">
+    <div class="project-stage-placeholder">
+      <p>Tu bude projekt</p>
+    </div>
+  </main>
+
+  <!-- ==============================
+       FLOATING INFO BUTTON
+       Triggers the info panel slide-in.
+       ============================== -->
+  <button class="info-btn" id="info-btn" aria-label="Project info">i</button>
+
+  <!-- ==============================
+       INFO PANEL (slides in from right)
+       Edit all the content sections below.
+       ============================== -->
+  <aside class="info-panel" id="info-panel" aria-label="Project details">
+
+    <div class="info-panel-close">
+      <button class="close-btn" id="close-panel" aria-label="Close panel">&times;</button>
+    </div>
+
+    <!-- Project title — update this -->
+    <h2>Project Title</h2>
+
+    <!-- The Problem -->
+    <div class="info-section">
+      <p class="info-section-label">The Problem</p>
+      <p>o co sa jedna</p>
+    </div>
+
+    <!-- The Solution -->
+    <div class="info-section">
+      <p class="info-section-label">The Solution</p>
+      <p>ako som zadelil</p>
+    </div>
+
+    <!-- Stack / Tools -->
+    <div class="info-section">
+      <p class="info-section-label">Stack</p>
+      <div class="info-tags">
+        <!-- Update or remove tags as needed -->
+        <span class="info-tag">toto som pouzil</span>
+        <span class="info-tag">toto tiez</span>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="info-section">
+      <p class="info-section-label">Links</p>
+      <div class="info-links">
+        <a href="https://github.com/" class="info-link" target="_blank" rel="noopener">GitHub repository →</a>
+        <a href="#" class="info-link" target="_blank" rel="noopener">Live site →</a>
+      </div>
+    </div>
+
+  </aside><!-- /.info-panel -->
+
+  <script src="../../script.js"></script>
+</body>
+</html>

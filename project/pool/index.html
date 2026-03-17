@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Live Kraví hora pool occupancy forecast" />
+  <meta property="og:title" content="Kraví hora pool forecast - Patrik Stano" />
+  <meta property="og:description" content="Real-time occupancy monitoring and predictions for the Kraví hora swimming pool." />
+  <title>Kraví hora pool forecast - Patrik Stano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body { padding-top: 0; }
+
+    .nav-minimal { height: 90px; }
+
+    .nav-back {
+      font-size: 1.56rem;
+      font-weight: 600;
+      color: var(--text);
+      position: relative;
+      isolation: isolate;
+      padding: 0.25rem 0.55rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-back::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      z-index: -1;
+      clip-path: inset(calc(100% - 4px) 0 0 0);
+      transition: clip-path 0.25s ease;
+    }
+
+    .nav-back:hover::before {
+      clip-path: inset(0 0 0 0);
+    }
+
+    /* ── Stage override ────────────────────────────────── */
+    .project-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      background: var(--bg);
+    }
+
+    /* ── Dashboard header ──────────────────────────────── */
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Pulsing live dot */
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22C55E;
+      flex-shrink: 0;
+      animation: livepulse 2s infinite;
+    }
+
+    .live-dot.offline {
+      background: var(--muted);
+      animation: none;
+    }
+
+    @keyframes livepulse {
+      0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+      60%  { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    .dash-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* ── Chart area ────────────────────────────────────── */
+    .dash-chart {
+      flex: 1;
+      position: relative;
+      padding: 1.5rem 2rem 0.5rem;
+      min-height: 0; /* allow flex shrink */
+    }
+
+    .dash-chart canvas {
+      display: block;
+      width: 100% !important;
+    }
+
+    /* Loading / error overlay */
+    .dash-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      z-index: 5;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .dash-overlay.hidden {
+      display: none;
+    }
+
+    /* ── Stats bar ─────────────────────────────────────── */
+    .dash-stats {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+
+    .dash-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .dash-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .dash-stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .dash-stat-value.accent {
+      color: var(--accent);
+    }
+
+    .dash-divider {
+      width: 1px;
+      height: 2rem;
+      background: var(--line);
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .dash-header { padding: 1rem 1.25rem; }
+      .dash-chart  { padding: 1rem 0.75rem 0; }
+      .dash-stats  { padding: 0.75rem 1.25rem 1.25rem; gap: 1.5rem; }
+      .dash-stat-value { font-size: 1.2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .dash-meta { display: none; }
+      .dash-divider { display: none; }
+      .dash-stats { gap: 1.25rem; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal nav -->
+  <nav class="nav-minimal">
+    <div class="nav-minimal-inner container">
+      <a href="../../projects/" class="nav-back">← Back</a>
+      <a href="../../" class="nav-logo"><img src="../../logo.svg" alt="Patrik Stano" /></a>
+    </div>
+  </nav>
+
+  <!-- Dashboard stage -->
+  <main class="project-stage">
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="dash-title">
+        <span class="live-dot" id="live-dot"></span>
+        Kraví hora - Live Occupancy
+      </div>
+      <span class="dash-meta" id="last-updated">Loading…</span>
+    </div>
+
+    <!-- Chart -->
+    <div class="dash-chart">
+      <div class="dash-overlay" id="overlay">Loading forecast…</div>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <span class="dash-stat-value" id="stat-people">—</span>
+        <span class="dash-stat-label">People now</span>
+      </div>
+      <div class="dash-divider"></div>
+      <div class="dash-stat">
+        <span class="dash-stat-value" id="stat-pct">—</span>
+        <span class="dash-stat-label">% full</span>
+      </div>
+      <div class="dash-divider"></div>
+      <div class="dash-stat">
+        <span class="dash-stat-value" id="stat-30">—</span>
+        <span class="dash-stat-label">In 30 min</span>
+      </div>
+      <div class="dash-divider"></div>
+      <div class="dash-stat">
+        <span class="dash-stat-value" id="stat-60">—</span>
+        <span class="dash-stat-label">In 60 min</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Info button + panel -->
+  <button class="info-btn" id="info-btn" aria-label="Project info">i</button>
+
+  <aside class="info-panel" id="info-panel" aria-label="Project details">
+    <div class="info-panel-close">
+      <button class="close-btn" id="close-panel" aria-label="Close panel">&times;</button>
+    </div>
+
+    <h2>Pool Occupancy Prediction</h2>
+
+    <div class="info-section">
+      <p class="info-section-label">The Problem</p>
+      <p>Swimming pools are frustrating when overcrowded, I wish there was a way to know how busy it'll be before you leave home. Existing "live occupancy" displays only tell you the situation right now, not in 30 or 60 minutes when you'd actually arrive.</p>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">The Solution</p>
+      <p>A continuously learning pipeline that reads sensor data every 10 minutes, trains LightGBM quantile regression models nightly, and serves probabilistic forecasts. The cone chart shows where occupancy is headed as well as how uncertain that prediction is.</p>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">Stack</p>
+      <div class="info-tags">
+        <span class="info-tag">Python</span>
+        <span class="info-tag">LightGBM</span>
+        <span class="info-tag">PostgreSQL</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">How it works</p>
+      <p>12 separate models (4 time horizons × 3 quantiles) capture uncertainty that grows with the forecast horizon — shown as the widening cone. The shaded band is the 10th–90th percentile range, the line is the median forecast.</p>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">Links</p>
+      <div class="info-links">
+        <a href="https://github.com/patrixtano" class="info-link" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="../../script.js"></script>
+  <script>
+    // ── Config ────────────────────────────────────────────────────────────────
+    const API_URL = 'https://gist.githubusercontent.com/patrixtano/e4f65807906464deee9820c0b9dcc672/raw/forecast.json';
+    const REFRESH_MS = 10 * 60 * 1000; // 10 minutes
+    const CAPACITY = 135;
+
+    // ── Palette (matches style.css) ───────────────────────────────────────────
+    const C_ACCENT      = '#D97041';
+    const C_TEXT        = '#1A1A18';
+    const C_MUTED       = '#6B6B62';
+    const C_LINE        = '#E5E5E0';
+    const C_CONE_FILL   = 'rgba(217, 112, 65, 0.10)';
+    const C_CONE_BORDER = 'rgba(217, 112, 65, 0)';
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function fmtTime(isoString) {
+      const d = new Date(isoString);
+      const h = String(d.getHours()).padStart(2, '0');
+      const m = String(d.getMinutes()).padStart(2, '0');
+      return `${h}:${m}`;
+    }
+
+    function fmtUpdated(isoString) {
+      const d = new Date(isoString);
+      return `Updated ${fmtTime(isoString)}`;
+    }
+
+    // ── "Now" vertical line plugin ────────────────────────────────────────────
+    // Draws a dashed vertical line + "NOW" label at the last real data point.
+    const nowLinePlugin = {
+      id: 'nowLine',
+      afterDraw(chart, _args, opts) {
+        const { ctx, scales: { x, y } } = chart;
+        const idx = opts.nowIndex;
+        if (idx == null) return;
+
+        const xPx = x.getPixelForValue(idx);
+
+        ctx.save();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = C_MUTED;
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(xPx, y.top);
+        ctx.lineTo(xPx, y.bottom);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = C_MUTED;
+        ctx.font = `600 10px 'DM Sans', system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('NOW', xPx, y.top - 8);
+        ctx.restore();
+      }
+    };
+
+    Chart.register(nowLinePlugin);
+
+    // ── Chart setup ───────────────────────────────────────────────────────────
+    const ctx = document.getElementById('chart').getContext('2d');
+    let chart = null;
+
+    function buildChart(labels, histData, q50Data, q90Data, q10Data, nowIndex) {
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            // 0 — Historical (solid line)
+            {
+              label: 'Actual',
+              data: histData,
+              borderColor: C_ACCENT,
+              backgroundColor: C_ACCENT,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: C_ACCENT,
+              tension: 0.3,
+              fill: false,
+              spanGaps: false,
+              order: 1,
+            },
+            // 1 — q50 median forecast (dashed line)
+            {
+              label: 'Forecast (median)',
+              data: q50Data,
+              borderColor: C_ACCENT,
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              pointRadius: (ctx) => ctx.dataIndex === nowIndex ? 0 : 3,
+              pointHoverRadius: 5,
+              pointBackgroundColor: C_ACCENT,
+              tension: 0.3,
+              fill: false,
+              spanGaps: false,
+              order: 2,
+            },
+            // 2 — q90 upper bound (invisible line, fills down to q10)
+            {
+              label: 'Upper bound (90th)',
+              data: q90Data,
+              borderColor: C_CONE_BORDER,
+              borderWidth: 0,
+              pointRadius: 0,
+              tension: 0.3,
+              fill: { target: 3, above: C_CONE_FILL },
+              spanGaps: false,
+              order: 3,
+            },
+            // 3 — q10 lower bound (invisible line)
+            {
+              label: 'Lower bound (10th)',
+              data: q10Data,
+              borderColor: C_CONE_BORDER,
+              borderWidth: 0,
+              pointRadius: 0,
+              tension: 0.3,
+              fill: false,
+              spanGaps: false,
+              order: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: window.innerWidth < 600 ? 1.4 : 2.4,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#ffffff',
+              borderColor: C_LINE,
+              borderWidth: 1.5,
+              titleColor: C_TEXT,
+              bodyColor: C_MUTED,
+              padding: 10,
+              titleFont: { family: "'DM Sans', system-ui", weight: '600', size: 12 },
+              bodyFont:  { family: "'DM Sans', system-ui", weight: '400', size: 12 },
+              callbacks: {
+                label(item) {
+                  if (item.raw == null) return null;
+                  const labels = ['Actual', 'Forecast', 'Upper (90th)', 'Lower (10th)'];
+                  return `${labels[item.datasetIndex]}: ${Math.round(item.raw)} people`;
+                },
+              },
+              filter(item) {
+                if (item.dataIndex === nowIndex && item.datasetIndex !== 0) return false;
+                return item.raw != null;
+              },
+            },
+            nowLine: { nowIndex },
+          },
+          scales: {
+            x: {
+              grid: { color: C_LINE, lineWidth: 1 },
+              border: { color: C_LINE },
+              ticks: {
+                color: C_MUTED,
+                font: { family: "'DM Sans', system-ui", size: 11 },
+                maxRotation: 0,
+              },
+            },
+            y: {
+              min: 0,
+              max: CAPACITY,
+              grid: { color: C_LINE, lineWidth: 1 },
+              border: { color: C_LINE },
+              ticks: {
+                color: C_MUTED,
+                font: { family: "'DM Sans', system-ui", size: 11 },
+                stepSize: 25,
+                callback: (v) => v,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // ── Data fetching ─────────────────────────────────────────────────────────
+    async function fetchAndRender() {
+      const overlay = document.getElementById('overlay');
+      const dot = document.getElementById('live-dot');
+
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // Build labels and datasets
+        const recent = data.recent;        // [{timestamp, people}]
+        const preds  = data.predictions;   // [{horizon_minutes, predicted_for, lower, predicted, upper}]
+
+        const nRecent = recent.length;
+        const nPreds  = preds.length;
+        const nowIndex = nRecent - 1; // index of the "now" divider
+
+        const labels = [
+          ...recent.map(r => fmtTime(r.timestamp)),
+          ...preds.map(p => fmtTime(p.predicted_for)),
+        ];
+
+        const currentPeople = data.current.people;
+
+        // Historical: real values, then nulls for prediction slots
+        const histData = [
+          ...recent.map(r => r.people),
+          ...Array(nPreds).fill(null),
+        ];
+
+        // Predictions: nulls for historical slots, then prediction values.
+        // Anchor at nowIndex with currentPeople so the cone starts at "now".
+        const nullPad = Array(nowIndex).fill(null);
+
+        const q50Data = [...nullPad, currentPeople, ...preds.map(p => p.predicted)];
+        const q90Data = [...nullPad, currentPeople, ...preds.map(p => p.upper)];
+        const q10Data = [...nullPad, currentPeople, ...preds.map(p => p.lower)];
+
+        buildChart(labels, histData, q50Data, q90Data, q10Data, nowIndex);
+
+        // Update stats
+        document.getElementById('stat-people').textContent = currentPeople;
+        document.getElementById('stat-pct').textContent = data.current.occupancy_pct + '%';
+        const p30 = preds.find(p => p.horizon_minutes === 30);
+        const p60 = preds.find(p => p.horizon_minutes === 60);
+        document.getElementById('stat-30').textContent = p30 ? Math.round(p30.predicted) : '—';
+        document.getElementById('stat-60').textContent = p60 ? Math.round(p60.predicted) : '—';
+        document.getElementById('last-updated').textContent = fmtUpdated(data.generated_at);
+
+        // Live indicator
+        dot.classList.remove('offline');
+        overlay.classList.add('hidden');
+
+      } catch (err) {
+        console.error('Forecast fetch failed:', err);
+        dot.classList.add('offline');
+        overlay.classList.remove('hidden');
+        overlay.textContent = 'Could not load forecast. The API may be offline.';
+        document.getElementById('last-updated').textContent = 'Unavailable';
+      }
+    }
+
+    // Initial load + periodic refresh
+    fetchAndRender();
+    setInterval(fetchAndRender, REFRESH_MS);
+  </script>
+</body>
+</html>

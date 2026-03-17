@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Patrik Stano" />
+  <meta property="og:title" content="Patrik Stano" />
+  <meta property="og:description" content="description placeholder" />
+  <title>Patrik Stano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ==============================
+       NAVIGATION
+       ============================== -->
+  <nav class="nav">
+    <div class="nav-inner container">
+      <a href="/" class="nav-logo"><img src="logo.svg" alt="Patrik Stano" /></a>
+      <div class="nav-links">
+        <a href="projects/" class="nav-link">Projects</a>
+        <a href="about/" class="nav-link">About</a>
+      </div>
+      <a href="#contact" class="nav-link nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ==============================
+       HERO
+       ============================== -->
+  <section class="hero">
+    <div class="container">
+      <p class="section-label">Portfolio</p>
+      <h1 class="hero-name">Patrik Stano</h1>
+      <p class="hero-subtitle">subtitle placeholder</p>
+      <p class="hero-tagline">
+        tagline placeholder
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View work</a>
+        <a href="about/" class="btn btn-ghost">About me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       PROJECTS GRID
+       ============================== -->
+  <section class="section" id="projects">
+    <div class="container">
+      <p class="section-label">Selected work</p>
+
+      <div class="card-grid">
+
+        <!-- Card 1 -->
+        <a href="project/pool/" class="card" style="--pastel: var(--p4);">
+          <div class="card-thumb" style="background: #E8F4FF;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <h3 class="card-title">Pool Forecast</h3>
+              <span class="card-arrow">→</span>
+            </div>
+            <p class="card-tagline">Live pool occupancy prediction</p>
+            <p class="card-desc">A continuously learning pipeline that predicts swimming pool occupancy 30–120 minutes ahead using LightGBM quantile regression, live sensor data, and a probabilistic cone chart.</p>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="project/template/" class="card" style="--pastel: var(--p2);">
+          <div class="card-thumb"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <h3 class="card-title">title 1</h3>
+              <span class="card-arrow">→</span>
+            </div>
+            <p class="card-tagline">tagline 2</p>
+            <p class="card-desc">idk</p>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="project/template/" class="card" style="--pastel: var(--p3);">
+          <div class="card-thumb"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <h3 class="card-title">title 2</h3>
+              <span class="card-arrow">→</span>
+            </div>
+            <p class="card-tagline">tagline 2</p>
+            <p class="card-desc">idk idk</p>
+          </div>
+        </a>
+
+      </div><!-- /.card-grid -->
+
+      <div class="section-footer">
+        <a href="projects/" class="text-link">View all projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       ABOUT TEASER
+       ============================== -->
+  <section class="section section-about-teaser">
+    <div class="container">
+      <p class="section-label">About</p>
+      <div class="about-teaser-grid">
+
+        <div class="about-teaser-bio">
+          <p>nejaky popis</p>
+          <p class="about-teaser-p2">este nieco</p>
+          <a href="about/" class="text-link about-teaser-link">Read more about me →</a>
+        </div>
+
+        <div class="about-teaser-skills">
+          <p class="skills-heading">Things I work with</p>
+          <div class="skill-tags">
+            <span class="skill-tag">nieco</span>
+            <span class="skill-tag">nieco</span>
+            <span class="skill-tag">nieco</span>
+            <span class="skill-tag">nieco</span>
+            <span class="skill-tag">nieco</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       CONTACT
+       ============================== -->
+  <section class="section section-contact" id="contact">
+    <div class="container">
+      <p class="section-label">Contact</p>
+      <h2 class="contact-heading">Hit me up.</h2>
+      <p class="contact-subtext">toto mozno nefunguje</p>
+
+      <!--
+        FORMSPREE SETUP:
+        1. Go to https://formspree.io and create a free account.
+        2. Create a new form — you'll get an ID like "xpwzabcd".
+        3. Replace FORMSPREE_ID below with your actual form ID.
+        Example: action="https://formspree.io/f/xpwzabcd"
+      -->
+      <form
+        class="contact-form"
+        action="https://formspree.io/f/mlgpobyj"
+        method="POST"
+      >
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="yo whats up" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send message</button>
+      </form>
+
+      <div class="contact-socials">
+        <a href="https://github.com/patrixtano" class="contact-social-link" target="_blank" rel="noopener">
+          <span class="social-icon">GH</span> GitHub
+        </a>
+        <a href="https://linkedin.com/in/" class="contact-social-link" target="_blank" rel="noopener">
+          <span class="social-icon">LI</span> LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       FOOTER
+       ============================== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Patrik Stano</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script defer src="oneko.js"></script>
+</body>
+</html>

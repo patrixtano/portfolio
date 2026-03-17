@@ -1,0 +1,1314 @@
+/* ============================================================
+   style.css — Patrik Stano Portfolio
+   Shared stylesheet for all pages.
+   ============================================================ */
+
+
+/* ============================================================
+   1. CSS VARIABLES
+   ============================================================ */
+
+:root {
+  /* Core palette */
+  --bg:        #FAFAF8;
+  --text:      #1A1A18;
+  --accent:    #D97041;
+  --accent-h:  #B85A2E;
+  --muted:     #6B6B62;
+  --line:      #E5E5E0;
+
+  /* Border shorthand */
+  --border: 1.5px solid #1A1A18;
+
+  /* Card hover pastels */
+  --p1: #FFF0E8;
+  --p2: #EEE8FF;
+  --p3: #E8FFF0;
+  --p4: #E8F4FF;
+  --p5: #FFE8EE;
+  --p6: #EEF8E8;
+  --p7: #FFF8E8;
+  --p8: #F0E8FF;
+
+  /* Spacing */
+  --section-gap: 6rem;
+}
+
+
+/* ============================================================
+   2. RESET + BASE
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* offset anchor links so fixed nav doesn't cover target */
+  scroll-padding-top: 100px;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 1.0625rem; /* ~17px base for better readability */
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  /* Fixed nav takes up 80px — push all content below it */
+  padding-top: 120px;
+  /* Fade in on load — JS adds class .loaded */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+
+/* ============================================================
+   3. TYPOGRAPHY SCALE
+   ============================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+p {
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Large display text — used on hero */
+.hero-name {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+}
+
+/* Section headings */
+h2 {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Muted body text */
+.text-muted {
+  color: var(--muted);
+}
+
+
+/* ============================================================
+   4. LAYOUT / CONTAINER
+   ============================================================ */
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: var(--section-gap) 0;
+  border-top: 1px solid var(--line);
+}
+
+.section-footer {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+/* Section label — small uppercase eyebrow */
+.section-label {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+
+/* ============================================================
+   5. NAVIGATION
+   Two states:
+   • Default (at top): transparent bg, large centered links,
+     accent-colored rectangle underline on hover/active
+   • .scrolled (on scroll): terracotta bg, 96px tall
+   ============================================================ */
+
+.nav {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 70px;
+  background: var(--bg);
+  transition: background 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, top 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+/* Flex row: logo + links on left, contact pushed to right */
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 3rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Logo — SVG image in a white circle, inverts on hover */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 3px solid var(--text);
+  border-radius: 50%;
+  padding: 2px;
+  line-height: 0;
+  transition: filter 0.2s ease;
+}
+
+.nav-logo img {
+  display: block;
+  height: 51px;
+  width: 51px;
+}
+
+.nav-logo:hover {
+  filter: invert(1);
+}
+
+/* Links sit left, next to the logo; contact pushed to far right via margin-left: auto */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+}
+
+/* Individual nav links */
+.nav-link {
+  font-size: 1.56rem;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  isolation: isolate;        /* contain the pseudo-element stacking */
+  padding: 0.25rem 0.55rem;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+/* Background block: thin line by default, expands to full on hover.
+   clip-path inset(top right bottom left) — clips from the top,
+   leaving only 4px visible at the bottom = thin line. */
+.nav-link:not(.nav-cta)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  z-index: -1;
+  clip-path: inset(calc(100% - 4px) 0 0 0);
+  transition: clip-path 0.25s ease;
+}
+
+/* On hover: expand clip to reveal full block */
+.nav-link:not(.nav-cta):hover::before,
+.nav-link.active::before {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Keep text readable on the colored block */
+.nav-link:not(.nav-cta):hover {
+  color: var(--text);
+}
+
+/* On scrolled (colored bg), use dark block instead of accent */
+.nav.scrolled .nav-link:not(.nav-cta)::before {
+  background: var(--text);
+}
+
+.nav.scrolled .nav-link:not(.nav-cta):hover {
+  color: var(--bg);
+}
+
+/* Contact button — pushed to far right */
+.nav-cta {
+  margin-left: auto;
+  font-size: 1.56rem;
+  font-weight: 600;
+  border: 3px solid var(--text);
+  padding: 0.35rem 1.1rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.nav-cta::after {
+  display: none;
+}
+
+.nav-cta:hover {
+  background: var(--text);
+  color: var(--bg);
+  opacity: 1;
+}
+
+/* ---- SCROLLED STATE ---- */
+
+.nav.scrolled {
+  top: 0;
+  height: 76px;
+  background: var(--accent);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+.nav.scrolled .nav-cta {
+  border-color: var(--text);
+}
+
+.nav.scrolled .nav-cta:hover {
+  background: var(--text);
+  color: var(--accent);
+}
+
+
+/* ============================================================
+   6. HERO SECTION
+   ============================================================ */
+
+.hero {
+  padding: 50px 0 6rem;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.hero-tagline {
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 2rem;
+  max-width: 600px;
+  line-height: 1.4;
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   7. BUTTONS
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.65rem 1.4rem;
+  border-radius: 2px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1.5px solid var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-h);
+  border-color: var(--accent-h);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Text link with underline */
+.text-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  border-bottom: 1px solid var(--text);
+  padding-bottom: 1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.text-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+
+/* ============================================================
+   8. PROJECT CARD GRID
+   ============================================================ */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Each card is an anchor tag */
+.card {
+  display: block;
+  background: #ffffff;
+  border: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* Placeholder thumbnail — 19/10 ≈ 30% shorter than original 4/3 */
+.card-thumb {
+  aspect-ratio: 19 / 10;
+  background: #F0EDE8;
+  width: 100%;
+  transition: background 0.25s ease;
+}
+
+.card-body {
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.card-arrow {
+  font-size: 1.1rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+  margin-top: 1px;
+}
+
+.card-tagline {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+  font-weight: 400;
+}
+
+/* Hidden description — expands on hover */
+.card-desc {
+  font-size: 1.1rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-top: 0.75rem;
+  /* Hidden by default */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+/* Card hover state — outline renders above children (fixes image border),
+   pastel bg, no lift, no shadow */
+.card:hover {
+  background: var(--pastel, var(--p1));
+  outline: 3px solid var(--text);
+  outline-offset: -1.5px;
+  z-index: 1;
+}
+
+.card:hover .card-desc {
+  max-height: 8rem;
+  opacity: 1;
+}
+
+.card:hover .card-arrow {
+  color: var(--accent);
+  transform: translateX(2px);
+}
+
+.card:hover .card-thumb {
+  background: #E6E2DC;
+}
+
+
+/* ============================================================
+   9. ABOUT TEASER SECTION
+   ============================================================ */
+
+.section-about-teaser {
+  background: var(--bg);
+}
+
+.about-teaser-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-teaser-bio p {
+  font-size: 1.35rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.about-teaser-p2 {
+  margin-top: 1rem;
+}
+
+.about-teaser-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+}
+
+.skills-heading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.skill-tag {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text);
+  border: var(--border);
+  padding: 0.35rem 0.9rem;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.skill-tag:hover {
+  background: var(--line);
+}
+
+
+/* ============================================================
+   10. CONTACT SECTION
+   ============================================================ */
+
+.section-contact {
+  background: #0F1117;
+  border-top: none;
+}
+
+.section-contact .section-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.contact-heading {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  line-height: 1.05;
+}
+
+.contact-subtext {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 3rem;
+  max-width: 500px;
+  font-weight: 500;
+}
+
+/* Form */
+.contact-form {
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: #ffffff;
+  border: 2px solid transparent;
+  padding: 0.9rem 1.1rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #aaa;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+}
+
+/* Social links below form */
+.contact-socials {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.contact-social-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.2s ease;
+}
+
+.contact-social-link:hover {
+  color: #ffffff;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 2rem 0;
+}
+
+.footer p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+
+/* ============================================================
+   12. PROJECTS PAGE STYLES  (.projects-page)
+   ============================================================ */
+
+.projects-page-header {
+  padding: 3rem 0 3rem;
+}
+
+.projects-page-header h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-top: 0.5rem;
+}
+
+/* Full grid — slightly larger cards with 16/9 images */
+.projects-full-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 3rem 0 6rem;
+}
+
+.project-card-full {
+  display: block;
+  border: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.project-card-full:hover {
+  background: var(--pastel, var(--p1));
+  outline: 3px solid var(--text);
+  outline-offset: -1.5px;
+  z-index: 1;
+}
+
+.project-card-img {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #F0EDE8;
+  transition: background 0.25s ease;
+}
+
+.project-card-full:hover .project-card-img {
+  background: #E6E2DC;
+}
+
+.project-card-content {
+  padding: 1.5rem;
+}
+
+.project-card-content h3 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.project-card-content p {
+  font-size: 1.2rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.project-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.project-tag {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.8rem;
+  border-radius: 2px;
+  letter-spacing: 0.03em;
+}
+
+.project-card-link {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-bottom: 1.5px solid var(--text);
+  padding-bottom: 1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+
+/* ============================================================
+   13. ABOUT PAGE STYLES
+   ============================================================ */
+
+.about-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+.about-page h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.about-section {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-bio p + p {
+  margin-top: 1rem;
+}
+
+.about-bio p {
+  font-size: 1.5rem;
+  line-height: 1.7;
+}
+
+/* Current work card */
+.now-card {
+  border: var(--border);
+  padding: 1.5rem;
+  border-radius: 2px;
+  background: var(--bg);
+}
+
+.now-card-role {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.now-card-meta {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.now-card-desc {
+  font-size: 1.2rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 0;
+}
+
+/* Vertical left rail — dashed */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--line);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 2rem;
+  padding-bottom: 2.25rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Dot centered on the rail */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1.5px var(--accent);
+  transform: translateX(0);
+}
+
+.timeline-item-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-item-meta {
+  font-size: 1.1rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Skills sections */
+.skills-block + .skills-block {
+  margin-top: 1.75rem;
+}
+
+.skills-block-label {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+/* Publications */
+.publications-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  counter-reset: pub-counter;
+}
+
+.publications-list li {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  counter-increment: pub-counter;
+}
+
+.publications-list li::before {
+  content: counter(pub-counter) ".";
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 500;
+  padding-top: 0.15rem;
+}
+
+.pub-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1.5px solid var(--text);
+  padding-bottom: 1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  display: inline;
+}
+
+.pub-title:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.pub-meta {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+/* Links section */
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  border: var(--border);
+  padding: 0.6rem 1.25rem;
+  border-radius: 2px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-link:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+
+/* ============================================================
+   14. PROJECT DETAIL PAGE STYLES  (project/template/)
+   ============================================================ */
+
+/* Minimal nav for project pages */
+.nav-minimal {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 60px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+}
+
+.nav-minimal-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-back {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s ease;
+}
+
+.nav-back:hover {
+  color: var(--text);
+}
+
+/* Full-bleed project stage */
+.project-stage {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F3F0;
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.project-stage-placeholder {
+  max-width: 480px;
+}
+
+.project-stage-placeholder p {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* Floating info button — fixed bottom-right */
+.info-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  z-index: 90;
+  box-shadow: 0 2px 12px rgba(217, 112, 65, 0.35);
+  animation: pulse 2.5s infinite;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.info-btn:hover {
+  background: var(--accent-h);
+  transform: scale(1.07);
+  animation: none;
+}
+
+/* Subtle pulse animation */
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(217, 112, 65, 0.45); }
+  60%  { box-shadow: 0 0 0 10px rgba(217, 112, 65, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 112, 65, 0); }
+}
+
+/* Info panel — slides in from right */
+.info-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(380px, 90vw);
+  background: var(--bg);
+  border-left: var(--border);
+  z-index: 100;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.info-panel.open {
+  transform: translateX(0);
+}
+
+.info-panel-close {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.close-btn {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: var(--text);
+}
+
+.info-panel h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.info-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.65rem;
+}
+
+.info-section p {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.info-tag {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text);
+  border: var(--border);
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+}
+
+.info-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.info-link {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1px;
+  display: inline-block;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.info-link:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+
+/* ============================================================
+   15. RESPONSIVE — 768px breakpoint
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  :root {
+    --section-gap: 4rem;
+  }
+
+  /* Nav: tighten on mobile */
+  .nav-inner {
+    gap: 1rem;
+    padding: 0 1.25rem;
+  }
+
+  .nav-links {
+    gap: 1.5rem;
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+  }
+
+  .nav-cta {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 4rem 0 3.5rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.05rem;
+  }
+
+  /* Card grid: single column */
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* About teaser: stack columns */
+  .about-teaser-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  /* Projects full grid: single column */
+  .projects-full-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Contact socials: wrap */
+  .contact-socials {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* About page: reduce padding */
+  .about-page {
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  /* Info panel: full width on small screens */
+  .info-panel {
+    width: 100%;
+  }
+
+  .info-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .contact-socials {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
