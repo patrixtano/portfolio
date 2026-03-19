@@ -508,6 +508,19 @@
         const q90Data = [...nullPad, currentPeople, ...preds.map(p => p.upper)];
         const q10Data = [...nullPad, currentPeople, ...preds.map(p => p.lower)];
 
+        // Pool closed — show message, grey out chart
+        if (!data.is_open) {
+          dot.classList.add('offline');
+          overlay.classList.remove('hidden');
+          overlay.textContent = `Pool opens at ${data.opens_at}`;
+          document.getElementById('stat-people').textContent = 'Closed';
+          document.getElementById('stat-pct').textContent = '—';
+          document.getElementById('stat-30').textContent = '—';
+          document.getElementById('stat-60').textContent = '—';
+          document.getElementById('last-updated').textContent = fmtUpdated(data.generated_at);
+          return;
+        }
+
         buildChart(labels, histData, q50Data, q90Data, q10Data, nowIndex);
 
         // Update stats
