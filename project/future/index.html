@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PITIA — Oracle Interface. A living map of discovered predictions." />
+  <meta property="og:title" content="PITIA — Patrik Stano" />
+  <meta property="og:description" content="A fortune prediction installation visualized as a star field timeline." />
+  <title>PITIA — Patrik Stano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* ── Dark theme overrides ─────────────────────────── */
+    :root {
+      --pitia-bg: #08080c;
+      --pitia-gold: #c9a554;
+      --pitia-gold-dim: rgba(201, 165, 84, 0.35);
+      --pitia-text: #d4d0c8;
+      --pitia-muted: #6b6860;
+      --pitia-card-bg: rgba(201, 165, 84, 0.04);
+      --pitia-card-border: rgba(201, 165, 84, 0.12);
+      --pitia-black: #000000;
+      --pitia-line: #2a2a28;
+    }
+
+    body {
+      padding-top: 0;
+      background: var(--pitia-bg);
+      color: var(--pitia-text);
+    }
+
+    /* ── Nav overrides for dark bg ─────────────────────── */
+    .nav-minimal {
+      height: 90px;
+      background: var(--pitia-bg);
+      border-bottom: 1px solid var(--pitia-line);
+    }
+
+    .nav-back {
+      font-size: 1.56rem;
+      font-weight: 600;
+      color: var(--pitia-text);
+      position: relative;
+      isolation: isolate;
+      padding: 0.25rem 0.55rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-back::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--pitia-gold);
+      z-index: -1;
+      clip-path: inset(calc(100% - 4px) 0 0 0);
+      transition: clip-path 0.25s ease;
+    }
+
+    .nav-back:hover::before {
+      clip-path: inset(0 0 0 0);
+    }
+
+    .nav-logo {
+      filter: invert(1);
+    }
+
+    .nav-logo:hover {
+      filter: invert(0);
+    }
+
+    /* ── Stage override ────────────────────────────────── */
+    .project-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      background: var(--pitia-bg);
+      min-height: auto;
+      text-align: left;
+    }
+
+    /* ── Stats section ─────────────────────────────────── */
+    .pitia-stats {
+      padding: 3rem 2rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .stats-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .stats-title {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--pitia-text);
+      text-shadow: 0 0 30px var(--pitia-gold-dim), 0 0 60px rgba(201, 165, 84, 0.15);
+    }
+
+    .stats-subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--pitia-muted);
+      margin-top: 0.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--pitia-card-bg);
+      border: 1px solid var(--pitia-card-border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .stat-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--pitia-gold);
+      line-height: 1;
+      text-shadow: 0 0 20px var(--pitia-gold-dim);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--pitia-muted);
+    }
+
+    /* ── Distribution chart ────────────────────────────── */
+    .chart-section {
+      padding: 0 2rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .chart-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--pitia-muted);
+      margin-bottom: 1rem;
+    }
+
+    .chart-container {
+      position: relative;
+      background: var(--pitia-card-bg);
+      border: 1px solid var(--pitia-card-border);
+      border-radius: 4px;
+      padding: 1.25rem;
+    }
+
+    /* ── Section divider ───────────────────────────────── */
+    .pitia-divider {
+      height: 80px;
+      background: linear-gradient(to bottom, var(--pitia-bg), var(--pitia-black));
+    }
+
+    /* ── Timeline section ──────────────────────────────── */
+    .pitia-timeline {
+      background: var(--pitia-black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-container {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      border-left: 2px dashed #333;
+      transform: translateX(-1px);
+    }
+
+    .year-marker {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #444;
+      background: var(--pitia-black);
+      padding: 0.25rem 0.75rem;
+      z-index: 2;
+      user-select: none;
+    }
+
+    /* ── Stars ─────────────────────────────────────────── */
+    .star {
+      position: absolute;
+      cursor: pointer;
+      transition: filter 0.3s ease, transform 0.3s ease;
+      z-index: 3;
+      background-size: contain;
+      background-repeat: no-repeat;
+      image-rendering: pixelated;
+    }
+
+    .star.no-year {
+      opacity: var(--base-opacity, 0.5);
+    }
+
+    .star:hover {
+      filter: drop-shadow(0 0 8px var(--pitia-gold)) drop-shadow(0 0 20px var(--pitia-gold-dim));
+      transform: scale(1.4);
+      z-index: 10;
+    }
+
+    .star.no-year:hover {
+      opacity: 1;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--base-opacity, 0.6); }
+      50% { opacity: calc(var(--base-opacity, 0.6) + 0.25); }
+    }
+
+    .star {
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .star.filtered-out {
+      opacity: 0 !important;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    /* ── Probability range slider ──────────────────────── */
+    .range-filter {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid #222;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      justify-content: center;
+    }
+
+    .range-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pitia-muted);
+      white-space: nowrap;
+    }
+
+    .range-values {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--pitia-gold);
+      min-width: 80px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .range-track {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .range-track input[type="range"] {
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: none;
+      pointer-events: none;
+      margin: 0;
+    }
+
+    .range-track input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: transparent;
+    }
+
+    .range-track input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--pitia-gold);
+      border: 2px solid #000;
+      cursor: pointer;
+      pointer-events: all;
+      margin-top: -5px;
+      box-shadow: 0 0 6px rgba(201, 165, 84, 0.4);
+    }
+
+    .range-track input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--pitia-gold);
+      border: 2px solid #000;
+      cursor: pointer;
+      pointer-events: all;
+      box-shadow: 0 0 6px rgba(201, 165, 84, 0.4);
+    }
+
+    .range-track-fill {
+      position: absolute;
+      height: 4px;
+      background: var(--pitia-gold);
+      opacity: 0.4;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    .range-track-bg {
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .range-filter {
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+        gap: 0.5rem;
+      }
+
+      .range-track {
+        max-width: 100%;
+        order: 3;
+        width: 100%;
+      }
+    }
+
+    /* ── Receipt tooltip ───────────────────────────────── */
+    .receipt-tooltip {
+      position: fixed;
+      z-index: 100;
+      background: #f5f0e8;
+      color: #1a1a18;
+      font-family: 'Courier New', 'Courier', monospace;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      padding: 14px 16px;
+      max-width: 280px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      display: none;
+    }
+
+    .receipt-tooltip.visible {
+      display: block;
+    }
+
+    .receipt-header {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .receipt-divider {
+      border: none;
+      border-top: 1px dashed #999;
+      margin: 6px 0;
+    }
+
+    .receipt-fortune {
+      font-style: italic;
+      margin: 6px 0;
+      word-wrap: break-word;
+    }
+
+    .receipt-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.68rem;
+      color: #555;
+    }
+
+    /* ── Language switch ────────────────────────────────── */
+    .lang-switch {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #1a1a18;
+      color: var(--pitia-gold);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid var(--pitia-card-border);
+      z-index: 90;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-switch:hover {
+      background: var(--pitia-gold);
+      color: #1a1a18;
+    }
+
+    @media (max-width: 768px) {
+      .lang-switch {
+        bottom: 1.25rem;
+        left: 1.25rem;
+      }
+    }
+
+    /* ── Info panel overrides for dark theme ────────────── */
+    .info-btn {
+      background: var(--pitia-gold);
+      box-shadow: 0 2px 12px rgba(201, 165, 84, 0.35);
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(201, 165, 84, 0.45); }
+      60%  { box-shadow: 0 0 0 10px rgba(201, 165, 84, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(201, 165, 84, 0); }
+    }
+
+    .info-btn:hover {
+      background: #b8943e;
+    }
+
+    .info-panel {
+      background: #111110;
+      border-left: 1px solid var(--pitia-line);
+    }
+
+    .info-panel h2 {
+      color: var(--pitia-text);
+    }
+
+    .info-section {
+      border-bottom-color: var(--pitia-line);
+    }
+
+    .info-section-label {
+      color: var(--pitia-muted);
+    }
+
+    .info-section p {
+      color: var(--pitia-text);
+    }
+
+    .info-tag {
+      color: var(--pitia-text);
+      border-color: var(--pitia-card-border);
+    }
+
+    .info-link {
+      color: var(--pitia-muted);
+      border-bottom-color: var(--pitia-line);
+    }
+
+    .info-link:hover {
+      color: var(--pitia-text);
+      border-color: var(--pitia-text);
+    }
+
+    .close-btn {
+      color: var(--pitia-muted);
+    }
+
+    .close-btn:hover {
+      color: var(--pitia-text);
+    }
+
+    /* ── Loading state ─────────────────────────────────── */
+    .pitia-loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--pitia-muted);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .pitia-loading span {
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .stat-card {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.75rem;
+        padding: 1rem 1.25rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .pitia-stats {
+        padding: 2rem 1.25rem 1.5rem;
+      }
+
+      .chart-section {
+        padding: 0 1.25rem 2rem;
+      }
+
+      .year-marker {
+        font-size: 0.6rem;
+      }
+
+      .receipt-tooltip {
+        max-width: 240px;
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-title {
+        letter-spacing: 0.08em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal nav -->
+  <nav class="nav-minimal">
+    <div class="nav-minimal-inner container">
+      <a href="../../projects/" class="nav-back">← Back</a>
+      <a href="../../" class="nav-logo"><img src="../../logo.svg" alt="Patrik Stano" /></a>
+    </div>
+  </nav>
+
+  <main class="project-stage">
+
+    <!-- Stats dashboard -->
+    <section class="pitia-stats">
+      <div class="stats-header">
+        <h1 class="stats-title">PITIA</h1>
+        <p class="stats-subtitle" data-i18n="subtitle">Oracle Interface</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-value" id="stat-total">—</span>
+          <span class="stat-label" data-i18n="statTotal">Predictions Generated</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-discovered">—</span>
+          <span class="stat-label" data-i18n="statDiscovered">Unique Discovered</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-pct">—</span>
+          <span class="stat-label" data-i18n="statPct">of the Future Revealed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Distribution chart -->
+    <section class="chart-section">
+      <p class="chart-label" data-i18n="chartLabel">Probability Distribution</p>
+      <div class="chart-container">
+        <canvas id="dist-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- Gradient divider -->
+    <div class="pitia-divider"></div>
+
+    <!-- Timeline -->
+    <section class="pitia-timeline" id="timeline-section">
+      <div class="range-filter" id="range-filter" style="display:none;">
+        <span class="range-label" data-i18n="rangeLabel">Probability</span>
+        <div class="range-track">
+          <div class="range-track-bg"></div>
+          <div class="range-track-fill" id="range-fill"></div>
+          <input type="range" id="range-min" min="0" max="100" value="0" />
+          <input type="range" id="range-max" min="0" max="100" value="100" />
+        </div>
+        <span class="range-values" id="range-values">0% – 100%</span>
+      </div>
+      <div class="pitia-loading" id="timeline-loading">
+        <span data-i18n="loading">CONNECTING TO ORACLE...</span>
+      </div>
+      <div class="timeline-container" id="timeline-container" style="display:none;">
+        <div class="timeline-line"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Receipt tooltip (shared, repositioned on hover) -->
+  <div class="receipt-tooltip" id="receipt-tooltip">
+    <div class="receipt-header" id="receipt-header"></div>
+    <hr class="receipt-divider" />
+    <div class="receipt-fortune" id="receipt-fortune"></div>
+    <hr class="receipt-divider" />
+    <div class="receipt-meta">
+      <span id="receipt-prob"></span>
+      <span id="receipt-year"></span>
+    </div>
+  </div>
+
+  <!-- Language switch -->
+  <button class="lang-switch" id="lang-switch" aria-label="Switch language">EN</button>
+
+  <!-- Info button + panel -->
+  <button class="info-btn" id="info-btn" aria-label="Project info">i</button>
+
+  <aside class="info-panel" id="info-panel" aria-label="Project details">
+    <div class="info-panel-close">
+      <button class="close-btn" id="close-panel" aria-label="Close panel">&times;</button>
+    </div>
+
+    <h2>PITIA</h2>
+
+    <div class="info-section">
+      <p class="info-section-label">The Problem</p>
+      <p>We carry many possible futures, but no way to find the one that belongs to you.</p>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">The Solution</p>
+      <p>A fortune prediction installation. Users submit a word via a captive WiFi portal on a Raspberry Pi, which finds a semantically matching Czech fortune and prints it on a thermal printer. This page visualizes every prediction ever discovered.</p>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">Stack</p>
+      <div class="info-tags">
+        <span class="info-tag">Raspberry Pi</span>
+        <span class="info-tag">Python</span>
+        <span class="info-tag">Thermal Printer</span>
+        <span class="info-tag">Sentence Transformers</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-label">Links</p>
+      <div class="info-links">
+        <a href="https://github.com/patrixtano" class="info-link" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="../../script.js"></script>
+  <script>
+    // ── Config ────────────────────────────────────────────────────────────────
+    const GIST_USER = 'patrixtano';
+    const GIST_ID   = 'e0c21cc70a6320354d9d0fea002f8526';
+    const LOG_URL   = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/predictions_log.json`;
+    const STATS_URL = `https://gist.githubusercontent.com/${GIST_USER}/${GIST_ID}/raw/predictions_stats.json`;
+    const REFRESH_MS = 60 * 1000;
+
+    // ── i18n ──────────────────────────────────────────────────────────────────
+    const i18n = {
+      en: {
+        subtitle: 'Oracle Interface',
+        statTotal: 'Predictions Generated',
+        statDiscovered: 'Unique Discovered',
+        statPct: 'of the Future Revealed',
+        chartLabel: 'Probability Distribution',
+        rangeLabel: 'Probability',
+        loading: 'CONNECTING TO ORACLE...',
+        loadingFail: 'ORACLE OFFLINE — RETRYING...',
+        chartTooltipTitle: (label) => `Probability: ${label}%`,
+        chartTooltipLabel: (val) => `${val} predictions`,
+        prob: 'PROB',
+        year: 'YEAR',
+      },
+      cs: {
+        subtitle: 'Rozhraní věštírny',
+        statTotal: 'Vygenerováno předpovědí',
+        statDiscovered: 'Unikátních objeveno',
+        statPct: 'budoucnosti objeveno',
+        chartLabel: 'Rozložení pravděpodobnosti',
+        rangeLabel: 'Pravděpodobnost',
+        loading: 'PŘIPOJOVÁNÍ K VĚŠTÍRNĚ...',
+        loadingFail: 'VĚŠTÍRNA OFFLINE — OPAKUJI...',
+        chartTooltipTitle: (label) => `Pravděpodobnost: ${label}%`,
+        chartTooltipLabel: (val) => `${val} předpovědí`,
+        prob: 'PRAV',
+        year: 'ROK',
+      },
+    };
+
+    let currentLang = 'en';
+
+    function applyLang() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[currentLang][key]) {
+          el.textContent = i18n[currentLang][key];
+        }
+      });
+      document.getElementById('lang-switch').textContent = currentLang.toUpperCase();
+
+      // Re-render chart with translated tooltips if it exists
+      if (lastStats && lastStats.probability_distribution) {
+        renderDistChart(lastStats.probability_distribution);
+      }
+    }
+
+    document.getElementById('lang-switch').addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'cs' : 'en';
+      applyLang();
+    });
+
+    let lastStats = null;
+
+    // Timeline scale
+    const YEAR_START  = 2026;
+    const PX_PER_YEAR = 2;
+    const TIMELINE_PAD_TOP = 60;
+    const TIMELINE_PAD_BOTTOM = 80;
+
+    // ── Star tiers (10 custom pixel art PNGs, one per 10% bracket) ─────────
+    const STAR_TIERS = [
+      { src: 'stars/star-0.png', size: 6 },
+      { src: 'stars/star-1.png', size: 9 },
+      { src: 'stars/star-2.png', size: 11 },
+      { src: 'stars/star-3.png', size: 14 },
+      { src: 'stars/star-4.png', size: 18 },
+      { src: 'stars/star-5.png', size: 22 },
+      { src: 'stars/star-6.png', size: 26 },
+      { src: 'stars/star-7.png', size: 32 },
+      { src: 'stars/star-8.png', size: 38 },
+      { src: 'stars/star-9.png', size: 44 },
+    ];
+
+    function getStarTier(probability) {
+      return Math.min(9, Math.floor(probability / 10));
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function seededRandom(seed) {
+      let x = Math.sin(seed * 9301 + 49297) * 49297;
+      return x - Math.floor(x);
+    }
+
+    // Box-Muller: returns a normal-distributed value (mean 0, stddev 1)
+    function seededGaussian(seed) {
+      const u1 = seededRandom(seed);
+      const u2 = seededRandom(seed + 7);
+      return Math.sqrt(-2 * Math.log(u1 || 0.001)) * Math.cos(2 * Math.PI * u2);
+    }
+
+    function yearToY(year) {
+      return TIMELINE_PAD_TOP + (year - YEAR_START) * PX_PER_YEAR;
+    }
+
+    function cacheBust(url) {
+      return url + '?t=' + Date.now();
+    }
+
+    // ── Chart setup ───────────────────────────────────────────────────────────
+    let distChart = null;
+
+    function renderDistChart(distribution) {
+      const labels = [];
+      const values = [];
+
+      for (let i = 0; i <= 100; i++) {
+        labels.push(i);
+        values.push(distribution[String(i)] || 0);
+      }
+
+      const ctx = document.getElementById('dist-chart').getContext('2d');
+
+      if (distChart) distChart.destroy();
+
+      distChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: 'rgba(201, 165, 84, 0.5)',
+            borderColor: 'rgba(201, 165, 84, 0.8)',
+            borderWidth: 1,
+            borderRadius: 1,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: window.innerWidth < 600 ? 1.8 : 3,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1a18',
+              titleColor: '#d4d0c8',
+              bodyColor: '#c9a554',
+              borderColor: '#333',
+              borderWidth: 1,
+              titleFont: { family: "'Space Mono', monospace", size: 11 },
+              bodyFont:  { family: "'Space Mono', monospace", size: 11 },
+              callbacks: {
+                title: (items) => i18n[currentLang].chartTooltipTitle(items[0].label),
+                label: (item) => i18n[currentLang].chartTooltipLabel(item.raw),
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              border: { color: '#333' },
+              ticks: {
+                color: '#555',
+                font: { family: "'Space Mono', monospace", size: 9 },
+                maxRotation: 0,
+                callback: (v) => v % 10 === 0 ? v : '',
+              },
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              border: { color: '#333' },
+              ticks: {
+                color: '#555',
+                font: { family: "'Space Mono', monospace", size: 9 },
+              },
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    }
+
+    // ── Stats rendering ───────────────────────────────────────────────────────
+    function renderStats(stats) {
+      lastStats = stats;
+      document.getElementById('stat-total').textContent = stats.total_predictions.toLocaleString();
+      document.getElementById('stat-discovered').textContent = stats.total_distinct.toLocaleString();
+      document.getElementById('stat-pct').textContent = stats.discovery_percentage.toFixed(2) + '%';
+
+      if (stats.probability_distribution) {
+        renderDistChart(stats.probability_distribution);
+      }
+    }
+
+    // ── Timeline rendering ────────────────────────────────────────────────────
+    function renderTimeline(log) {
+      const container = document.getElementById('timeline-container');
+      const loading   = document.getElementById('timeline-loading');
+
+      const withYear    = log.filter(p => p.year != null);
+      const withoutYear = log.filter(p => p.year == null);
+
+      // Determine timeline range
+      const maxYear = withYear.length > 0
+        ? Math.max(...withYear.map(p => p.year))
+        : 2226;
+
+      const endYear = Math.ceil(maxYear / 100) * 100 + 100;
+      const totalHeight = TIMELINE_PAD_TOP + (endYear - YEAR_START) * PX_PER_YEAR + TIMELINE_PAD_BOTTOM;
+      container.style.height = totalHeight + 'px';
+
+      // Clear previous stars and markers (keep .timeline-line)
+      container.querySelectorAll('.year-marker, .star').forEach(el => el.remove());
+
+      // Year markers
+      const firstCentury = Math.ceil(YEAR_START / 100) * 100;
+      // Add the start year marker
+      addYearMarker(container, YEAR_START);
+      for (let y = firstCentury; y <= endYear; y += 100) {
+        if (y === YEAR_START) continue;
+        addYearMarker(container, y);
+      }
+
+      // Show container before positioning so layout is computed
+      loading.style.display = 'none';
+      container.style.display = 'block';
+
+      // Place year-based stars: normal distribution, moderate scatter from center
+      for (let i = 0; i < withYear.length; i++) {
+        const p = withYear[i];
+        const y = yearToY(p.year);
+        const g = seededGaussian(p.id);
+        const side = g >= 0 ? 1 : -1;
+        const buffer = 3 + seededRandom(p.id + 1) * 3;
+        const spread = Math.min(Math.abs(g) * 7.5, 24);
+        const xPercent = Math.max(5, Math.min(95, 50 + side * (buffer + spread)));
+
+        createStar(container, p, xPercent, y);
+      }
+
+      // Place null-year stars: pushed far from center so they don't mix with year stars
+      for (let i = 0; i < withoutYear.length; i++) {
+        const p = withoutYear[i];
+        const rand1 = seededRandom(p.id + 100);
+        const y = TIMELINE_PAD_TOP + rand1 * (totalHeight - TIMELINE_PAD_TOP - TIMELINE_PAD_BOTTOM);
+        const g = seededGaussian(p.id + 200);
+        const side = g >= 0 ? 1 : -1;
+        const buffer = 28 + seededRandom(p.id + 300) * 6;
+        const spread = Math.min(Math.abs(g) * 8, 15);
+        const xPercent = Math.max(5, Math.min(95, 50 + side * (buffer + spread)));
+
+        createStar(container, p, xPercent, y, true);
+      }
+    }
+
+    function addYearMarker(container, year) {
+      const marker = document.createElement('div');
+      marker.className = 'year-marker';
+      marker.textContent = year;
+      marker.style.top = yearToY(year) + 'px';
+      container.appendChild(marker);
+    }
+
+    function createStar(container, prediction, xPercent, yPx, isNoYear = false) {
+      const tier = getStarTier(prediction.probability);
+      const size = STAR_TIERS[tier].size;
+      const el = document.createElement('div');
+      el.className = 'star' + (isNoYear ? ' no-year' : '');
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.backgroundImage = `url("${STAR_TIERS[tier].src}")`;
+      el.style.left = `calc(${xPercent}% - ${size / 2}px)`;
+      el.style.top = (yPx - size / 2) + 'px';
+
+      if (isNoYear) {
+        el.style.setProperty('--base-opacity', String(0.35 + (prediction.probability / 100) * 0.25));
+      } else {
+        el.style.setProperty('--base-opacity', String(0.55 + (prediction.probability / 100) * 0.25));
+      }
+      el.style.animationDelay = (seededRandom(prediction.id + 500) * 4) + 's';
+
+      // Tooltip data
+      el.dataset.id = prediction.id;
+      el.dataset.fortuneEn = prediction.english_fortune;
+      el.dataset.fortuneCs = prediction.czech_fortune;
+      el.dataset.prob = prediction.probability;
+      el.dataset.year = prediction.year || '—';
+
+      // Hover events
+      el.addEventListener('mouseenter', showTooltip);
+      el.addEventListener('mouseleave', hideTooltip);
+      el.addEventListener('click', toggleTooltip);
+
+      container.appendChild(el);
+    }
+
+    // ── Tooltip logic ─────────────────────────────────────────────────────────
+    const tooltip = document.getElementById('receipt-tooltip');
+    let tooltipPinned = false;
+
+    function showTooltip(e) {
+      if (tooltipPinned) return;
+      fillTooltip(e.currentTarget);
+      positionTooltip(e);
+    }
+
+    function hideTooltip() {
+      if (tooltipPinned) return;
+      tooltip.classList.remove('visible');
+    }
+
+    function toggleTooltip(e) {
+      e.stopPropagation();
+      if (tooltipPinned) {
+        tooltipPinned = false;
+        tooltip.classList.remove('visible');
+        return;
+      }
+      fillTooltip(e.currentTarget);
+      positionTooltip(e);
+      tooltipPinned = true;
+    }
+
+    function fillTooltip(el) {
+      document.getElementById('receipt-header').textContent = `ID #${el.dataset.id}`;
+      const fortune = currentLang === 'cs' ? el.dataset.fortuneCs : el.dataset.fortuneEn;
+      document.getElementById('receipt-fortune').textContent = `"${fortune}"`;
+      document.getElementById('receipt-prob').textContent = `${i18n[currentLang].prob}: ${el.dataset.prob}%`;
+      document.getElementById('receipt-year').textContent = `${i18n[currentLang].year}: ${el.dataset.year}`;
+      tooltip.classList.add('visible');
+    }
+
+    function positionTooltip(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      let left = rect.right + 12;
+      let top = rect.top;
+
+      if (left + 280 > window.innerWidth) {
+        left = rect.left - 292;
+      }
+      if (left < 8) {
+        left = 8;
+      }
+      if (top + 200 > window.innerHeight) {
+        top = window.innerHeight - 210;
+      }
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }
+
+    document.addEventListener('click', () => {
+      if (tooltipPinned) {
+        tooltipPinned = false;
+        tooltip.classList.remove('visible');
+      }
+    });
+
+    // ── Range slider logic ──────────────────────────────────────────────────
+    const rangeMin  = document.getElementById('range-min');
+    const rangeMax  = document.getElementById('range-max');
+    const rangeFill = document.getElementById('range-fill');
+    const rangeVals = document.getElementById('range-values');
+    const rangeBar  = document.getElementById('range-filter');
+
+    function updateRangeFilter() {
+      let lo = parseInt(rangeMin.value);
+      let hi = parseInt(rangeMax.value);
+
+      if (lo > hi) {
+        [lo, hi] = [hi, lo];
+        rangeMin.value = lo;
+        rangeMax.value = hi;
+      }
+
+      rangeVals.textContent = `${lo}% – ${hi}%`;
+      rangeFill.style.left  = lo + '%';
+      rangeFill.style.width = (hi - lo) + '%';
+
+      document.querySelectorAll('.star').forEach(el => {
+        const prob = parseInt(el.dataset.prob);
+        if (prob >= lo && prob <= hi) {
+          el.classList.remove('filtered-out');
+        } else {
+          el.classList.add('filtered-out');
+        }
+      });
+    }
+
+    rangeMin.addEventListener('input', updateRangeFilter);
+    rangeMax.addEventListener('input', updateRangeFilter);
+
+    // ── Data fetching ─────────────────────────────────────────────────────────
+    async function fetchData() {
+      try {
+        const [statsRes, logRes] = await Promise.all([
+          fetch(cacheBust(STATS_URL)),
+          fetch(cacheBust(LOG_URL)),
+        ]);
+
+        if (!statsRes.ok || !logRes.ok) throw new Error('Fetch failed');
+
+        const stats = await statsRes.json();
+        const log   = await logRes.json();
+
+        renderStats(stats);
+        renderTimeline(log);
+        rangeBar.style.display = 'flex';
+        updateRangeFilter();
+      } catch (err) {
+        console.error('PITIA data fetch failed:', err);
+        document.getElementById('timeline-loading').innerHTML =
+          `<span data-i18n="loadingFail">${i18n[currentLang].loadingFail}</span>`;
+      }
+    }
+
+    fetchData();
+    setInterval(fetchData, REFRESH_MS);
+  </script>
+</body>
+</html>
